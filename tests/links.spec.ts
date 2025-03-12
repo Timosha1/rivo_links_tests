@@ -1,10 +1,12 @@
-import { test, expect } from '@playwright/test';
-import { ApiResponse, StrategyItem } from './marketplace_api_interfaces'; // Импортируем ApiResponse и StrategyItem
+import {expect, test} from '@playwright/test';
+import {ApiResponse, StrategyItem} from "./marketplace_api_interfaces";
 import axios from 'axios';
 
 const apiUrl = "https://backend.rivo.xyz/marketplace"
 
-async function checkLinks(links: string[]) {
+async function checkLinks(links: string[], strategyName: string, strategyAddress: string) {
+    const displayName = strategyName || 'N/A';
+    const displayAddress = strategyAddress || 'N/A';
     for (const link of links) {
         try {
             const axiosResponse = await axios.get(link, {
@@ -17,27 +19,28 @@ async function checkLinks(links: string[]) {
                 }
             });
             expect(axiosResponse.status).toBe(200);
-            console.log(`Status ${axiosResponse.status} ${link}`);
+            console.log(`Status ${axiosResponse.status} | Name: ${displayName} | Address: ${displayAddress}`);
         } catch (error) {
-            console.error(`Error ${link}: ${error}`);
+            console.error(`Error Link: ${link} | Name: ${displayName} | Address: ${displayAddress}: ${error}`);
             expect(true).toBe(false);
         }
     }
 }
 
-
-
 test('Проверка ссылок websites', async ({ request }) => {
     const response = await request.get(apiUrl);
     expect(response.ok()).toBeTruthy();
     const data: ApiResponse = await response.json();
-    const links: string[] = [];
+
     for (const item of data as StrategyItem[]) {
         if (item.title.links && item.title.links.websites) {
-            links.push(...item.title.links.websites);
+            const websiteLinks = item.title.links.websites;
+            const strategyName = item.title.name;
+            const strategyAddress = item.title.address;
+
+            await checkLinks(websiteLinks, strategyName, strategyAddress);
         }
     }
-    await checkLinks(links);
 });
 
 test('Проверка Twitter ссылок', async ({ request }) => {
@@ -48,9 +51,12 @@ test('Проверка Twitter ссылок', async ({ request }) => {
     for (const item of data as StrategyItem[]) {
         if (item.title.links && item.title.links.twitter) {
             links.push(...item.title.links.twitter);
+            const strategyName = item.title.name;
+            const strategyAddress = item.title.address;
+            await checkLinks(links, strategyName, strategyAddress);
+            links.length = 0;
         }
     }
-    await checkLinks(links);
 });
 
 test('Проверка Дискорд ссылок', async ({ request }) => {
@@ -61,10 +67,13 @@ test('Проверка Дискорд ссылок', async ({ request }) => {
     for (const item of data as StrategyItem[]) {
         if (item.title.links && item.title.links.discord) {
             links.push(...item.title.links.discord);
+            const strategyName = item.title.name;
+            const strategyAddress = item.title.address;
+            await checkLinks(links, strategyName, strategyAddress);
+            links.length = 0;
         }
     }
-    await checkLinks(links);
-})
+});
 
 test('Проверка ссылок аудитов', async ({ request }) => {
     const response = await request.get(apiUrl);
@@ -76,8 +85,11 @@ test('Проверка ссылок аудитов', async ({ request }) => {
             const auditLink = item.risksAndAudits.audit.match(/\[.*?\]\((.*?)\)/)?.[1];
             if (auditLink) {
                 links.push(auditLink);
+                const strategyName = item.title.name;
+                const strategyAddress = item.title.address;
+                await checkLinks(links, strategyName, strategyAddress);
+                links.length = 0;
             }
         }
     }
-    await checkLinks(links);
 });
