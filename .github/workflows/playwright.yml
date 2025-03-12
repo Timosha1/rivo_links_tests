@@ -28,7 +28,7 @@ jobs:
 
       - name: Upload Playwright report # Шаг: Загрузка отчета Playwright (опционально)
         if: always() # Запускать шаг даже если предыдущие шаги провалились
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report # Имя артефакта
           path: playwright-report # Путь к каталогу с отчетом Playwright (обычно "playwright-report")
