@@ -9,7 +9,11 @@ async function checkLinks(links: string[]) {
         try {
             const axiosResponse = await axios.get(link, {
                 headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0',
+                    'Accept': 'application/json, text/plain, */*',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Cache-Control': 'no-cache, private',
+                    'Referer': 'https://www.google.com/',
                 }
             });
             expect(axiosResponse.status).toBe(200);
@@ -20,6 +24,8 @@ async function checkLinks(links: string[]) {
         }
     }
 }
+
+
 
 test('Проверка ссылок websites', async ({ request }) => {
     const response = await request.get(apiUrl);
