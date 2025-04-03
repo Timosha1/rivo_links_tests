@@ -1,35 +1,37 @@
-name: Playwright Tests # Имя вашего рабочего процесса, будет отображаться на вкладке Actions
+name: Playwright Tests
 
 on:
-  workflow_dispatch: # Триггер "workflow_dispatch" добавляет кнопку "Run workflow" на вкладку Actions
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
-  playwright-tests: # Имя задания
-    timeout-minutes: 60 # Максимальное время выполнения задания, в минутах
-    runs-on: ubuntu-latest # Операционная система, на которой будет выполняться задание
+  playwright-tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code # Шаг: Выгрузка кода репозитория
-        uses: actions/checkout@v3 # Используем готовое действие "actions/checkout@v3" для выгрузки кода
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js # Шаг: Настройка Node.js
-        uses: actions/setup-node@v3 # Используем готовое действие "actions/setup-node@v3" для установки Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18 # Версия Node.js, которую нужно установить
+          node-version: 18
 
-      - name: Install dependencies # Шаг: Установка зависимостей проекта (npm install)
-        run: npm install # Выполняем команду "npm install" в командной строке
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Install Playwright Browsers # Шаг: Установка браузеров Playwright
-        run: npx playwright install --with-deps chromium # Выполняем команду "npx playwright install --with-deps chromium" для установки браузеров Playwright
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright tests # Шаг: Запуск тестов Playwright
-        run: npx playwright test # Выполняем команду "npx playwright test" для запуска тестов
+      - name: Run Playwright tests
+        run: npx playwright test
 
-      - name: Upload Playwright report # Шаг: Загрузка отчета Playwright (опционально)
-        if: always() # Запускать шаг даже если предыдущие шаги провалились
+      - name: Upload Playwright report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report # Имя артефакта
-          path: playwright-report # Путь к каталогу с отчетом Playwright (обычно "playwright-report")
-          retention-days: 30 # Срок хранения артефакта (в днях)
+          name: playwright-report
+          path: playwright-report
+          retention-days: 30

@@ -27,7 +27,7 @@ async function checkLinks(links: string[], strategyName: string, strategyAddress
     }
 }
 
-test('Проверка ссылок websites', async ({ request }) => {
+test('Test Website links', async ({ request }) => {
     const response = await request.get(apiUrl);
     expect(response.ok()).toBeTruthy();
     const data: ApiResponse = await response.json();
@@ -43,7 +43,7 @@ test('Проверка ссылок websites', async ({ request }) => {
     }
 });
 
-test('Проверка Twitter ссылок', async ({ request }) => {
+test('Test Twitter links', async ({ request }) => {
     const response = await request.get(apiUrl);
     expect(response.ok()).toBeTruthy();
     const data: ApiResponse = await response.json();
@@ -59,7 +59,7 @@ test('Проверка Twitter ссылок', async ({ request }) => {
     }
 });
 
-test('Проверка Дискорд ссылок', async ({ request }) => {
+test('Test Discord links', async ({ request }) => {
     const response = await request.get(apiUrl);
     expect(response.ok()).toBeTruthy();
     const data: ApiResponse = await response.json();
@@ -75,7 +75,7 @@ test('Проверка Дискорд ссылок', async ({ request }) => {
     }
 });
 
-test('Проверка ссылок аудитов', async ({ request }) => {
+test('Test Audit links', async ({ request }) => {
     const response = await request.get(apiUrl);
     expect(response.ok()).toBeTruthy();
     const data: ApiResponse = await response.json();
