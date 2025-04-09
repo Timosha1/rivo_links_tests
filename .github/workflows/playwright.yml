@@ -1,9 +1,9 @@
-name: Playwright Tests
+name: rivo_links_tests
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 12 * * 3'
 
 jobs:
   playwright-tests:
